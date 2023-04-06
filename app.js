@@ -14,23 +14,7 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', function (req, res) {
     res.render('index');
 });
-app.get('/remote-csv', function (req, res, next) {
-    var urlStr = req.query.url,
-        urlParsed = url.parse(urlStr);
-    console.log('proxying remote csv url: ', urlStr);
-    (urlParsed.protocol === 'https:' ? https : http).get(urlParsed, function (httpRes) {
-        httpRes
-        .on('data', function (data) {
-            res.write(data);
-        })
-        .on('end', function () {
-            res.end();
-        });
-    }).on('error', function (err) {
-        next(err);
-    });
-});
 
-var port = process.env.VCAP_APP_PORT || 3001;
+var port = process.env.port || 3001;
 app.listen(port);
 console.log('Listening on port ' + port);
